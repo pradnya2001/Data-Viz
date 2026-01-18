@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>influencer galaxy</title>
+  <!-- loads the poppins font to give color and texture -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <style>
+    * { 
+        padding: 0; 
+        margin: 0; 
+        box-sizing: border-box; 
+    }
+    body 
+    { 
+        font-family: 'Poppins', system-ui, sans-serif; 
+        background: #000204; 
+        color: #ede9e9; 
+        overflow-x: hidden; 
+    }
+
+    /* Star field details and decription */
+    #starfield 
+    { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%;
+        height: 100%; 
+        z-index: 0; 
+    }
+
+    /* container decription */
+    .container 
+    { 
+        position: relative; 
+        max-width: 1800px; 
+        z-index: 1;
+        padding: 41px 21px; 
+        margin: 0 auto; 
+         
+    }
+    /* h1 description */
+    .header 
+    { 
+        text-align: center; 
+        margin-bottom: 42px;
+        animation: fadeIn 2.3s ease-in; 
+         
+    }
+    h1 
+    {
+      font-weight: 800; 
+      letter-spacing: 1.2px; 
+      font-size: 3.4rem;
+      background: linear-gradient(135deg, #f85b88, #f1b234, #51c0ec);
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; 
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(238, 85, 129, 0.35);
+    }
+
+    .description 
+    {
+      max-width: 982px; 
+      padding: 29px 31px; 
+      margin: 29px auto;
+      background: rgba(23, 34, 58, 0.9); 
+      border-radius: 17px;
+      border: 2px solid rgba(99, 122, 226, 0.35);
+      line-height: 1.7; 
+      backdrop-filter: blur(11px);
+      font-size: 0.99em; 
+      box-shadow: 0 10px 40px rgba(20, 20, 31, 0.4);
+    }
+    /* h3 decription */
+    .description h3 
+    { 
+        color: #739ef5; 
+        font-size: 1.25em;
+        margin-bottom: 15px; 
+        font-weight: 601; 
+    }
+    .description strong 
+    { 
+        color: #f794da; 
+    }
+    .description p 
+    { 
+        margin-bottom: 13px; 
+        color: #d2d8e6; 
+    }
+
+    .visualization-container 
+    { 
+        margin: 49px auto; 
+        position: relative; 
+    }
+    /* constellation decription */
+    #constellation 
+    {
+      background: radial-gradient(ellipse at center, rgba(21, 31, 51, 0.8) 0%, rgba(1, 9, 21, 0.95) 100%);
+      border: 2px solid rgba(97, 121, 227, 0.35); 
+      border-radius: 23px;
+      width: 100%;
+      box-shadow: 0 0 60px rgba(101, 125, 236, 0.25), inset 0 0 60px rgba(4, 4, 4, 0.5);
+      height: auto;
+    }
+
+    /* legend description */
+    .legend 
+    {
+      display: flex; 
+      justify-content: space-around; 
+      flex-wrap: wrap; 
+      max-width: 1401px;
+      margin: 33px auto; 
+      border-radius: 17px;
+      padding: 25px; 
+      background: rgba(10, 16, 30, 0.85);  
+      border: 3px solid rgba(94, 117, 220, 0.25);
+      backdrop-filter: blur(11px);
+    }
+
+    .legend-item 
+    { 
+        flex: 1; 
+        min-width: 232px; 
+        margin: 13px; 
+        padding: 19px; 
+        border-radius: 13px;
+        border: 1px solid rgba(90, 113, 216, 0.2);
+      background: rgba(24, 32, 47, 0.55); 
+       
+    }
+    .legend-title 
+    { 
+        color: #8fb0ff;  
+        font-size: 1.05em; 
+        margin-bottom: 13px;
+        font-weight: 701; 
+    }
+    .legend-circle 
+    { 
+        margin-right: 11px; 
+        border-radius: 50%;
+        flex-shrink: 0; 
+         
+    }
+    .legend-content 
+    { 
+        display: flex;
+        font-size: 0.95em; 
+        align-items: center; 
+        margin: 9px 0; 
+        color: #c4d8f4; 
+    }
+
+    /* info toggle description */
+    .info-toggle 
+    {
+      position: fixed; 
+      bottom: 29px; 
+      right: 29px; 
+      background: linear-gradient(135deg,#f85b87,#eaae34); 
+      color: #0e1429; 
+      border: none;
+      letter-spacing: .7px; 
+      padding: 15px 23px; 
+      cursor: pointer;
+      border-radius: 999px;
+      font-weight: 700; 
+      box-shadow: 0 9px 25px rgba(235, 173, 49, 0.35); 
+      transition: all 0.30s ease; 
+      z-index: 1000;
+    }
+    .info-toggle:hover 
+    { 
+        transform: translateY(-1px) scale(1.04); 
+        box-shadow: 0 10px 29px rgba(243, 179, 51, 0.5); 
+    }
+
+    .info-panel {
+      position: fixed; 
+      top: 0; 
+      right: -500px; 
+      width: 480px; 
+      overflow-y: auto; 
+      border-left: 2px solid rgba(97, 121, 227, 0.45); 
+      padding: 37px 29px;
+      height: 100vh; 
+      background: rgba(14, 22, 40, 0.98);
+      transition: right 0.3s ease; 
+      z-index: 999; 
+      box-shadow: -6px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .info-panel.active 
+    { 
+        right: 0; 
+    }
+    .info-panel h2 
+    { 
+        font-size: 1.4em; 
+        color: #88a9f7; 
+        margin-bottom: 18px; 
+        font-weight: 702; 
+    }
+    .info-panel h3 
+    { 
+        color: #f697da; 
+        font-size: 1.06em;
+        margin-bottom: 11px; 
+        margin-top: 21px; 
+        font-weight: 702; 
+    }
+    .info-panel p, .info-panel ul 
+    { 
+        color: #c6daf7; 
+        margin-bottom: 13px; 
+        line-height: 1.8; 
+    }
+
+    /* Tooltip - details and description */
+    .tooltip 
+    {
+      position: absolute; 
+      background: rgba(17, 26, 48, 0.96); 
+      border: 3px solid rgba(92, 115, 220, 0.5);
+      transition: opacity 0.15s ease; 
+      padding: 11px 13px; 
+     max-width: 262px; 
+      z-index: 100; 
+      box-shadow: 0 8px 25px rgba(0,0,0,0.45);
+      opacity: 0; 
+      border-radius: 11px; 
+      pointer-events: none;
+      backdrop-filter: blur(11px);
+    }
+    .tooltip.active 
+    { 
+        opacity: 1; 
+    }
+    .tooltip-name 
+    { 
+        font-size: 1rem; 
+        color: #f999dc; 
+        font-weight: 702; 
+        letter-spacing: .3px; 
+    }
+    /*  stats panel decription */
+    .stats-panel 
+    {
+      max-width: 980px; 
+      margin: 27px auto; 
+      padding: 23px; 
+      border: 2px solid rgba(103, 127, 233, 0.28); 
+      border-radius: 17px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(11px); 
+      text-align: center;
+    }
+    .stats-panel h3 
+    { 
+        color: #8bacf9; 
+        font-size: 1.1em;
+        margin-bottom: 17px; 
+        font-weight: 702; 
+    }
+    .stat-grid 
+    { 
+        display: grid; 
+        margin-top: 11px;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); 
+        gap: 17px; 
+    }
+    .stat-box 
+    { 
+        padding: 13px; 
+        background: rgba(30, 41, 59, 0.55);
+        border-radius: 13px; 
+        border: 1px solid rgba(92, 114, 212, 0.18); 
+    }
+    .stat-value 
+    { 
+        font-size: 1.8em; 
+        font-weight: 802; 
+        color: #f595d8;
+    }
+    .stat-label 
+    { 
+        font-size: 0.85em; 
+        color: #c7dbf8; 
+        margin-top: 5px; 
+        letter-spacing: .4px; 
+    }
+
+    /* profile card with details of each influencer */
+    .profile-backdrop 
+    {
+      position: fixed; 
+      inset: 0; 
+      background: rgba(0, 0, 0, 0.55);
+       backdrop-filter: blur(3px);
+      opacity: 0; 
+      pointer-events: none; 
+      transition: opacity .27s ease; 
+      z-index: 1202;
+    }
+
+    .profile-backdrop.active 
+    { 
+        opacity: 1; 
+        pointer-events: auto; 
+    }
+    /*  profiel modal decription */
+    .profile-modal 
+    {
+      position: fixed; 
+      left: 50%; 
+      top: 50%; 
+      transform: translate(-50%, -44%) scale(.97);
+      width: min(820px, 92vw); 
+      max-height: 82vh; overflow: auto;
+      border: 3px solid rgba(116, 139, 244, 0.28); 
+      border-radius: 18px; padding: 18px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 8px rgba(120,144,255,.06) inset;
+      opacity: 0;
+      background: linear-gradient(146deg, rgba(16,22,40,.98), rgba(10,14,28,.98));
+      pointer-events: none; 
+      transition: opacity .27s ease, transform .25s ease; 
+      z-index: 1302;
+    }
+
+    .profile-modal.active 
+    { 
+        opacity: 1; 
+        pointer-events: auto; 
+        transform: translate(-50%, -50%) scale(1); 
+    }
+    .profile-close 
+    {
+      position: absolute; 
+      top: 10px; 
+      background: none; 
+      border: none; 
+      color: #cfe3ff; 
+      font-size: 1.9rem;
+      right: 12px; 
+      cursor: pointer;
+      transition: transform .17s ease;
+    }
+    .profile-close:hover 
+    { 
+        transform: scale(1.06); 
+        color: #f195d5; 
+    }
+    /*  profile grid decription */
+    .profile-grid 
+    {
+      display: grid; 
+      gap: 13px; 
+      grid-template-columns: repeat(3, minmax(140px,1fr));
+      margin-top: 13px;
+    }
+
+    .profile-stat 
+    {
+      background: rgba(26, 35, 51, 0.55); 
+      border-radius: 13px;
+      border: 1.1px solid rgba(96, 118, 218, 0.18);
+      padding: 13px 14px;
+    }
+
+    .profile-stat .value 
+    { 
+        font-size: 1.4rem; 
+        font-weight: 802; 
+        color: #89aaf6; 
+    }
+    .profile-stat .label 
+    { 
+        font-size: .82rem; 
+        color: #cfe3ff; 
+        opacity: .95; 
+        margin-top: 3px; 
+    }
+
+    .profile-badge 
+    {
+      display: inline-flex; 
+      align-items: center; 
+      gap: 9px;
+    padding: 8px 12px; 
+      border-radius: 999px;
+      background: rgba(243, 150, 215, 0.15); 
+      border: 1px dashed rgba(255, 157, 225, .4);
+      color: #ff9de1; 
+      font-weight: 702; 
+      margin-top: 11px;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-22px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      .info-panel { width: 100%; right: -100%; }
+      .legend { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Background - animation for the starfield -->
+  <canvas id="starfield"></canvas>
+
+  <div class="container">
+    <div class="header">
+      <h1>The Instagram Galaxy!</h1>
+    </div>
+    <!-- decription for the info tab -->
+    <div class="description">
+      <h3>Digital Details!</h3>
+      <p>In this exhibit, Instagram influencers shine as stars in their own constellation.
+        Each star's characteristics gives the influence metrics that define their presence in the social media universe.</p>
+      <p><strong>Hover:</strong> show handle only • <strong>Click:</strong> open profile card • <strong>Esc/Outside:</strong> close.</p>
+    </div>
+
+    <!-- details for the stats panel-->
+    <div class="stats-panel">
+      <h3>Statistics station</h3>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="totalInfluencers">-</div>
+          <div class="stat-label">INFLUENCERS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="totalFollowers">-</div>
+          <div class="stat-label">TOTAL FOLLOWERS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="totalPosts">-</div>
+          <div class="stat-label">TOTAL POSTS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main visualization -->
+    <div class="visualization-container">
+      <svg id="constellation" viewBox="0 0 1600 1200" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-title">Star Size: Followers</div>
+        <div class="legend-content">
+          <div class="legend-circle" style="width: 30px; height: 30px; background: radial-gradient(circle, rgba(102, 126, 234, 0.8), rgba(102, 126, 234, 0.2));"></div>
+          <span>Mega Stars: 100M+</span>
+        </div>
+        <div class="legend-content">
+          <div class="legend-circle" style="width: 20px; height: 20px; background: radial-gradient(circle, rgba(102, 126, 234, 0.8), rgba(102, 126, 234, 0.2));"></div>
+          <span>Major Stars: 50–100M</span>
+        </div>
+        <div class="legend-content">
+          <div class="legend-circle" style="width: 12px; height: 12px; background: radial-gradient(circle, rgba(102, 126, 234, 0.8), rgba(102, 126, 234, 0.2));"></div>
+          <span>Rising Stars: 10–50M</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <div class="legend-title">Star Glow: Engagement</div>
+        <div class="legend-content">
+          <div class="legend-circle" style="width: 20px; height: 20px; background: radial-gradient(circle, rgba(240, 147, 251, 1), rgba(240, 147, 251, 0)); box-shadow: 0 0 20px rgba(240, 147, 251, 0.8);"></div>
+          <span>High engagement</span>
+        </div>
+        <div class="legend-content">
+          <div class="legend-circle" style="width: 20px; height: 20px; background: radial-gradient(circle, rgba(102, 126, 234, 0.6), rgba(102, 126, 234, 0));"></div>
+          <span>Lower engagement</span>
+        </div>
+      </div>
+
+      <!-- legend item -->
+      <div class="legend-item">
+        <div class="legend-title">Orbital Rings: Influence Score</div>
+        <div class="legend-content"><div class="legend-circle" style="width: 16px; height: 16px; background: #f093fb;"></div><span>Elite (≥92)</span></div>
+        <div class="legend-content"><div class="legend-circle" style="width: 16px; height: 16px; background: #667eea;"></div><span>Premium (90–91)</span></div>
+        <div class="legend-content"><div class="legend-circle" style="width: 16px; height: 16px; background: #4facfe;"></div><span>High (88–89)</span></div>
+        <div class="legend-content"><div class="legend-circle" style="width: 16px; height: 16px; background: #00f2fe;"></div><span>Growing (85–87)</span></div>
+        <div class="legend-content"><div class="legend-circle" style="width: 16px; height: 16px; background: #a78bfa;"></div><span>Rising (&lt;85)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tooltip -->
+  <div class="tooltip" id="tooltip"></div>
+
+  <!-- Info Toggle Button -->
+  <button class="info-toggle" onclick="toggleInfo()">INFO</button>
+
+  <!-- Info Panel details -->
+  <div class="info-panel" id="infoPanel">
+    <button class="close-info" onclick="toggleInfo()"></button>
+    <h2>Design Document</h2>
+    <h3>Visualization Type: Novel/Combinatorial</h3>
+    <ul>
+      <li><strong>Novel:</strong> Astronomical constellation metaphor with custom star glyphs.</li>
+      <li><strong>Combinatorial:</strong> Radial layout + size + color gradients + glow intensity + orbital animation.</li>
+
+      <h3>Visual Encodings</h3>
+    <ul>
+      <li><strong>Radial Distance</strong> — Influence score tier</li>
+      <li><strong>Angular Position</strong> — Even distribution with jitter</li>
+      <li><strong>Size</strong> — Followers</li>
+      <li><strong>Glow intensity</strong> — Engagement rate</li>
+      <li><strong>Hue</strong> — Score tier</li>
+    </ul>
+
+    <h3>Data Attributes Visualized</h3>
+    <ul>
+      <li>Influence Score represented by position + hue</li>
+      <li>Followers represented by size</li>
+      <li>Engagement Rate represented by glow</li>
+      <li>Rank / Avg Likes / Posts / Country represented by tooltip</li>
+    </ul>
+
+    <h3>Dataset</h3>
+    <p>Using the first 75 rows from the “Top Influencers Crushing On Instagram” dataset.</p>
+  </div>
+    </ul>
+  </div>
+
+  <!-- profile card -->
+
+  <div class="profile-backdrop" id="profileBackdrop"> </div>
+  <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+
+    <button class="profile-close" id="profileClose" aria-label="Close"></button>
+    <div class="profile-body" style="display:grid;gap:12px;">
+      <div class="profile-meta">
+        <h2 id="profileTitle" style="font-size:1.6rem;margin-bottom:6px;color:#ff9de1">@handle</h2>
+        <div class="handle" id="profileTier" style="color:#cfe3ff;opacity:.9;margin-bottom:10px;">Tier</div>
+        <div class="profile-grid">
+          <div class="profile-stat"><div class="value" id="pfFollowers">—</div><div class="label">Followers</div></div>
+          <div class="profile-stat"><div class="value" id="pfEng">—</div><div class="label">Engagement</div></div>
+          <div class="profile-stat"><div class="value" id="pfLikes">—</div><div class="label">Avg Likes</div></div>
+          <div class="profile-stat"><div class="value" id="pfPosts">—</div><div class="label">Posts</div></div>
+          <div class="profile-stat"><div class="value" id="pfRank">—</div><div class="label">Rank</div></div>
+          <div class="profile-stat"><div class="value" id="pfCountry">—</div><div class="label">Country/Region</div></div>
+        </div>
+        <div class="profile-badge" id="pfBadge">★ Spotlight Profile</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // starfield animation
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    class Star {
+      constructor() 
+      {
+        this.y = Math.random() * canvas.height;
+        this.x = Math.random() * canvas.width;
+        this.size = Math.random() * 1.7;
+        this.twinkleSpeed = Math.random() * 0.02 + 0.01;
+        this.opacity = Math.random();
+      }
+      update() 
+      {
+        this.opacity += this.twinkleSpeed;
+        if (this.opacity > 1 || this.opacity < 0) this.twinkleSpeed = -this.twinkleSpeed;
+      }
+      draw() 
+      {
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.56})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // star details
+    const backgroundStars = Array(550).fill().map(() => new Star());
+    (function animateStarfield()
+    {
+      ctx.fillStyle = 'rgba(0, 8, 20, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      backgroundStars.forEach(star => { star.update(); star.draw(); });
+      requestAnimationFrame(animateStarfield);
+    })();
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    });
+
+    function toggleInfo(){ document.getElementById('infoPanel').classList.toggle('active'); }
+
+    // MAIN VISUALIZATION DETAILS
+    const width = 1603, height = 1203;
+    const centerX = width / 2, centerY = height / 2;
+    const svg = d3.select("#constellation").attr("width", width).attr("height", height);
+
+    const defs = svg.append("defs");
+    const filter = defs.append("filter").attr("id","glow");
+    filter.append("feGaussianBlur").attr("stdDeviation","2").attr("result","coloredBlur");
+    const feMerge = filter.append("feMerge");
+    feMerge.append("feMergeNode").attr("in","coloredBlur");
+    feMerge.append("feMergeNode").attr("in","SourceGraphic");
+
+    const safeFixed = (v,n,fb='—') => Number.isFinite(v) ? v.toFixed(n) : fb;
+    const parseNumberUnit = (str) => {
+      if (str == null) return null;
+      const s = String(str).trim().toLowerCase().replace(/,/g,'').replace(/\s+/g,'');
+      if (!s) return null;
+      let val = parseFloat(s);
+      if (!isFinite(val)) return null;
+      if (s.includes('k')) return val * 1e3;
+      if (s.includes('m')) return val * 1e6;
+      return val;
+    };
+    const parseMillions = (str) => {
+      if (str == null) return null;
+      const s = String(str).trim().toLowerCase().replace(/,/g,'').replace(/\s+/g,'');
+      if (!s) return null;
+      let val = parseFloat(s);
+      if (!isFinite(val)) return null;
+      if (s.includes('k')) return val / 1e3;
+      return val;
+    };
+
+    let paused = false;
+    
+    //DATASET DETAILS - ONLY 75 ROWS
+    d3.csv("Top_Influencers.csv").then(rawData => {
+      const cleaned = rawData.slice(0,75).map(d => {
+        const username = (d['Channel Info'] || '').toString().trim().replace(/\n/g,'');
+        const followersM = parseMillions(d.Followers);
+        const eng = parseFloat((d['60-Day Eng Rate'] || '0').toString().replace('%','')) * 100;
+        const engagementRate = (eng > 100 ? 100 : eng);
+        const avgLikesM = parseMillions(d['Avg. Likes']);
+        const posts = parseNumberUnit(d.Posts);
+        return {
+          rank: parseInt(d.Rank),
+          username,
+          influenceScore: parseInt(d['Influence Score']),
+          followers: followersM,
+          avgLikes: avgLikesM,
+          posts: Number.isFinite(posts) ? Math.round(posts) : null,
+          engagementRate,
+          country: d['Country Or Region'] || 'Unknown'
+        };
+      });
+
+      const data = cleaned.filter(d => Number.isFinite(d.influenceScore) && Number.isFinite(d.followers));
+
+      // Stats for the panel
+      const totalFollowersM = d3.sum(data, d => d.followers || 0);
+      const totalFollowersB = totalFollowersM / 1000;
+      const totalPosts = d3.sum(data, d => d.posts || 0);
+      document.getElementById('totalInfluencers').textContent = data.length;
+      document.getElementById('totalFollowers').textContent = `${totalFollowersB.toFixed(1)}B`;
+      document.getElementById('totalPosts').textContent = `${(totalPosts/1000).toFixed(1)}k`;
+
+      // Rings in the orbital layout
+      const scoreToRing = (infscore) => {
+        if (infscore >= 92) return { ring: 1, radius: 150, color: "#f093fb", label: "Elite" };
+        if (infscore >= 90) return { ring: 2, radius: 230, color: "#667eea", label: "Premium" };
+        if (infscore >= 88) return { ring: 3, radius: 310, color: "#4facfe", label: "High" };
+        if (infscore >= 85) return { ring: 4, radius: 390, color: "#00f2fe", label: "Growing" };
+        return { ring: 5, radius: 471, color: "#a78bfa", label: "Rising" };
+      };
+
+      const ringCounts = {}, ringAngles = {};
+      data.forEach(d => {
+        d.ringInfo = scoreToRing(d.influenceScore);
+        if (!ringCounts[d.ringInfo.ring]) { ringCounts[d.ringInfo.ring] = 0; ringAngles[d.ringInfo.ring] = 0; }
+        ringCounts[d.ringInfo.ring]++;
+      });
+
+      // Positions
+      data.forEach(d => {
+        const totalInRing = ringCounts[d.ringInfo.ring];
+        const angleStep = (2 * Math.PI) / totalInRing;
+        const angle = ringAngles[d.ringInfo.ring] * angleStep;
+        const radiusJitter = (Math.random() - 0.55) * 26;
+        const angleJitter = (Math.random() - 0.55) * 0.26;
+        d.angle = angle + angleJitter;
+        d.radius = d.ringInfo.radius + radiusJitter;
+        d.x = centerX + d.radius * Math.cos(d.angle);
+        d.y = centerY + d.radius * Math.sin(d.angle);
+        ringAngles[d.ringInfo.ring]++;
+      });
+
+      const sizeScale = d3.scaleSqrt().domain([0, d3.max(data, d => d.followers || 0)]).range([4, 35]);
+      const engagementScale = d3.scaleLinear().domain([0, d3.max(data, d => d.engagementRate || 0)]).range([0.3, 1]);
+
+      // Orbits
+      const orbitGroup = svg.append("g").attr("class","orbits");
+      [1,2,3,4,5].forEach(ring => {
+        const ringInfo = data.find(d => d.ringInfo.ring === ring)?.ringInfo;
+        if (ringInfo) {
+          orbitGroup.append("circle")
+            .attr("cx", centerX).attr("cy", centerY).attr("r", ringInfo.radius)
+            .attr("fill","none").attr("stroke", ringInfo.color)
+            .attr("stroke-width",1).attr("stroke-opacity",0.16)
+            .attr("stroke-dasharray","5,5");
+        }
+      });
+
+      // Gradients for the star glows
+      data.forEach((d,i) => {
+        const g = defs.append("radialGradient")
+          .attr("id", `star-gradient-${i}`)
+          .attr("cx","50%").attr("cy","50%").attr("r","50%");
+        const intensity = engagementScale(d.engagementRate || 0);
+        const color = d.ringInfo.color;
+        g.append("stop").attr("offset","0%").attr("stop-color",color).attr("stop-opacity",intensity);
+        g.append("stop").attr("offset","50%").attr("stop-color",color).attr("stop-opacity",intensity*0.5);
+        g.append("stop").attr("offset","100%").attr("stop-color",color).attr("stop-opacity",0);
+      });
+
+      // Stars themselves 
+      const stars = svg.append("g").attr("class","stars")
+        .selectAll(".star").data(data).enter().append("g")
+        .attr("class","star")
+        .attr("transform", d => `translate(${d.x}, ${d.y})`);
+
+      stars.append("circle")
+        .attr("class","star-glow")
+        .attr("r", d => sizeScale(d.followers) * 2.5)
+        .attr("fill",(d,i) => `url(#star-gradient-${i})`)
+        .attr("opacity", d => engagementScale(d.engagementRate || 0) * 0.44);
+
+      stars.append("circle")
+        .attr("class","star-inner-glow")
+        .attr("r", d => sizeScale(d.followers) * 1.55)
+        .attr("fill",(d,i) => `url(#star-gradient-${i})`)
+        .attr("opacity", d => engagementScale(d.engagementRate || 0) * 0.64);
+
+      stars.append("circle")
+        .attr("class","star-core")
+        .attr("r", d => sizeScale(d.followers))
+        .attr("fill", d => d.ringInfo.color)
+        .attr("opacity", 0.95)
+        .attr("filter","url(#glow)");
+
+      // Tooltip - for the hover details
+      const tooltip = d3.select("#tooltip");
+      stars
+        .on("mouseover", function(event, d){
+          d3.select(this).select(".star-core")
+            .transition().duration(180)
+            .attr("r", sizeScale(d.followers) * 1.35);
+
+          tooltip
+            .style("left", (event.pageX + 16) + "px")
+            .style("top", (event.pageY - 16) + "px")
+            .classed("active", true)
+            .html(`<div class="tooltip-name">@${d.username}</div>`);
+        })
+        .on("mousemove", function(event){
+          tooltip.style("left", (event.pageX + 16) + "px").style("top", (event.pageY - 16) + "px");
+        })
+        .on("mouseout", function(event, d){
+          d3.select(this).select(".star-core")
+            .transition().duration(180)
+            .attr("r", sizeScale(d.followers));
+          tooltip.classed("active", false);
+        });
+
+      // Rotation + click to open profile card
+      let angle = 0;
+      (function animate(){
+        if (!paused) {
+          angle += 0.0003;
+          stars.attr("transform", d => {
+            const rotated = d.angle + angle;
+            const x = centerX + d.radius * Math.cos(rotated);
+            const y = centerY + d.radius * Math.sin(rotated);
+            d.x = x; d.y = y;
+            return `translate(${x}, ${y})`;
+          });
+        }
+        requestAnimationFrame(animate);
+      })();
+
+      function focusStar(d, sel) {
+        paused = true;
+        svg.selectAll(".star").interrupt().transition().duration(300).attr("opacity", s => (s === d ? 1 : 0.08));
+        svg.selectAll(".orbits circle").interrupt().transition().duration(300).attr("stroke-opacity", 0.06);
+        const k = 2.6;
+        sel.raise().interrupt().transition().duration(521).ease(d3.easeCubicOut)
+          .attr("transform", `translate(${centerX}, ${centerY}) scale(${k})`);
+      }
+      function resetFocus() {
+        paused = false;
+        svg.selectAll(".orbits circle").interrupt().transition().duration(320).attr("stroke-opacity", 0.16);
+        stars.interrupt().transition().duration(521).ease(d3.easeCubicOut).attr("transform", d => `translate(${d.x}, ${d.y})`);
+        svg.selectAll(".star").interrupt().transition().duration(320).attr("opacity", 1);
+      }
+
+      // Profile modal elements
+      const modall = document.getElementById('profileModal');
+      const backdrops = document.getElementById('profileBackdrop');
+      const closeButn = document.getElementById('profileClose');
+      const titles = document.getElementById('profileTitle');
+      const tiers = document.getElementById('profileTier');
+      const pfFollowers = document.getElementById('pfFollowers');
+      const pfEng = document.getElementById('pfEng');
+      const pfLikes = document.getElementById('pfLikes');
+      const pfPosts = document.getElementById('pfPosts');
+      const pfRank = document.getElementById('pfRank');
+      const pfCountry = document.getElementById('pfCountry');
+      const pfBadge = document.getElementById('pfBadge');
+
+      function openProfile(d){
+        titles.textContent = `@${d.username}`;
+        tiers.textContent = `${d.ringInfo.label} Tier • Score ${d.influenceScore}`;
+        pfFollowers.textContent = `${safeFixed(d.followers, 1)}M`;
+        pfEng.textContent = `${safeFixed(d.engagementRate, 2)}%`;
+        pfLikes.textContent = Number.isFinite(d.avgLikes) ? `${safeFixed(d.avgLikes, 2)}M` : '—';
+        pfPosts.textContent = Number.isFinite(d.posts) ? d.posts.toLocaleString() : '—';
+        pfRank.textContent = Number.isFinite(d.rank) ? `#${d.rank}` : '—';
+        pfCountry.textContent = d.country || '—';
+        pfBadge.textContent = `★ ${d.ringInfo.label} Profile`;
+        backdrops.classList.add('active');
+        modall.classList.add('active');
+      }
+      function closeTheProfile(){
+        modall.classList.remove('active');
+        backdrops.classList.remove('active');
+        resetFocus();
+      }
+      backdrops.addEventListener('click', closeTheProfile);
+      closeButn.addEventListener('click', closeTheProfile);
+      window.addEventListener('keydown', e => { if (e.key === 'Escape') closeTheProfile(); });
+
+      stars.on("click", function(event, d){
+        event.stopPropagation();
+        focusStar(d, d3.select(this));
+        openProfile(d);
+      });
+      svg.on("click", function(){
+        if (modall.classList.contains('active')) closeTheProfile();
+      });
+
+    }).catch(error => {
+      console.error("Error loading data:", error);
+      svg.append("text").attr("x", centerX).attr("y", centerY).attr("text-anchor","middle")
+        .attr("fill","#f093fb").attr("font-size","20px").text("Data set loading error");
+    });
+  </script>
+</body>
+</html>

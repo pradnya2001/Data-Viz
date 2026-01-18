@@ -1,0 +1,357 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', 'Segoe UI', sans-serif;
+    line-height: 1.7;
+    color: #2c3e50;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px 30px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 50px 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 901;
+    font-size: 3.5rem;
+    color: #1a252f;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.student-info {
+    font-size: 1.2rem;
+    color: #5b7885;
+    font-weight: 601;
+    margin-bottom: 9px;
+}
+
+.assignment-title {
+    font-size: 1rem;
+    color: #7c96a3;
+    font-weight: 401;
+    font-style: italic;
+}
+
+.introduction {
+    background: white;
+    padding: 61px;
+    border-radius: 21px;
+    margin-bottom: 61px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.introduction h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 701;
+    font-size: 2.8rem;
+    color: #1a252f;
+    margin-bottom: 30px;
+}
+
+.introduction p {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: #37474f;
+    margin-bottom: 25px;
+}
+
+.dataset-info {
+    background: #f8f9fa;
+    padding: 25px;
+    border-left: 5px solid #0a2ae2;
+    border-radius: 8px;
+    margin-top: 35px;
+}
+
+.dataset-info a {
+    color: #0a2ae2;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.dataset-info a:hover {
+    border-bottom-color: #0a2ae2;
+}
+
+.visualizations {
+    margin-bottom: 59px;
+}
+
+.viz-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 41px;
+    margin-bottom: 60px;
+}
+
+.viz-card {
+    background: white;
+    border-radius: 21px;
+    padding: 41px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.viz-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+}
+
+.con-card::before {
+    background: linear-gradient(90deg, #c62828, #d32f2f, #e53935);
+}
+
+.pro-card::before {
+    background: linear-gradient(90deg, #2e7d32, #388e3c, #43a047);
+}
+
+.viz-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 21px 61px rgba(0, 0, 0, 0.18);
+}
+
+.viz-header {
+    margin-bottom: 30px;
+}
+
+.position-badge {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.position-badge.con {
+    background: linear-gradient(135deg, #c62828, #e53935);
+    color: white;
+}
+
+.position-badge.pro {
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+    color: white;
+}
+
+.viz-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: #1a252f;
+    line-height: 1.4;
+}
+
+.chart-wrapper {
+    margin: 30px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+}
+
+.caption {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #546e7a;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-top: 25px;
+}
+
+.caption strong {
+    color: #1a252f;
+    font-weight: 700;
+}
+
+.caption em {
+    font-style: italic;
+    color: #37474f;
+}
+
+/* Analysis Section */
+.analysis {
+    background: white;
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    margin-bottom: 60px;
+}
+
+.analysis > h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #1a252f;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+}
+
+.analysis-card {
+    padding: 40px;
+    background: #fafafa;
+    border-radius: 16px;
+    position: relative;
+    border-top: 6px solid;
+}
+
+.con-analysis {
+    border-top-color: #c62828;
+}
+
+.pro-analysis {
+    border-top-color: #2e7d32;
+}
+
+.analysis-card > h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #1a252f;
+    margin-bottom: 35px;
+}
+
+.technique {
+    margin-bottom: 35px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.technique:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.technique h4 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #263238;
+    margin-bottom: 12px;
+}
+
+.technique p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #546e7a;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 30px;
+    color: #78909c;
+    font-size: 0.95rem;
+}
+
+/* Chart Styling */
+.axis-label {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    fill: #546e7a;
+}
+
+.tick text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    fill: #78909c;
+}
+
+.legend-text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.92);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+    max-width: 280px;
+    line-height: 1.6;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip.visible {
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .viz-container,
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header h1 {
+        font-size: 3rem;
+    }
+    
+    .viz-card,
+    .analysis-card {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
+    }
+    
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .introduction,
+    .analysis {
+        padding: 30px 25px;
+    }
+    
+    .chart-wrapper svg {
+        width: 100% !important;
+        height: auto !important;
+    }
+}

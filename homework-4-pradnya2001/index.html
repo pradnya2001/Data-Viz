@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Homework #4: D3 Transitions</title>
+    <link rel="stylesheet" href="pnidagun.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Homework #4: D3 - Transitions</h1>
+        <p>Pradnya Sanjeev Nidagundi</p>
+        <p>pnidagun@asu.edu</p>
+    </header>
+
+    <div id="main-container">
+        <div id="control-panel">
+            <h2>Control Panel</h2>
+
+            <label for="dataset-select">Datasets</label>
+            <select id="dataset-select">
+                <option value="penguins">Penguin Dataset</option>
+                <option value="pokemon">Pokemon Dataset</option>
+                <option value="/testing/data/Test1.csv">Test 1 Dataset</option>
+                <option value="/testing/data/Test2.csv">Test 2 Dataset</option>
+            </select>
+
+            <label for="x-select">X-Attribute</label>
+            <select id="x-select"></select>
+
+            <label for="y-select">Y-Attribute</label>
+            <select id="y-select"></select>
+
+            <label for="color-select">Color</label>
+            <select id="color-select"></select>
+
+            <label for="boxplot-select">Box Plot</label>
+            <select id="boxplot-select"></select>
+
+            <button id="toggle-violin"> Show Violin Plot</button>
+        </div>
+
+        <div id="vis-container">
+            <div id="scatterplot-panel">
+                <h2>Scatter Plot</h2>
+                <svg id="scatterplot-svg"></svg>
+            </div>
+
+            <div id="boxplot-panel">
+                <h2>Box Plot - <span id="selected-count">0</span> points selected </h2>
+                <svg id="boxplot-svg"></svg>
+            </div>
+        </div>
+    </div>
+
+    <script src="pnidagun.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,229 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #FFF8F2;
+    color: #333;
+}
+
+header {
+    background-color: #f4ded6;
+    padding: 15px 30px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+h1, h2, p {
+    text-align: center;
+    margin: 5px 0;
+}
+
+h1 {
+    font-size: 2.9em;
+    color: #1a1a1a;
+}
+
+h2 {
+    font-size: 1.9em;
+    color: #444;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 9px;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 0.9em;
+    color: #333030;
+}
+
+#main-container {
+    display: flex;
+    flex-wrap: wrap; 
+    padding: 20px;
+    max-width: 1800px;
+    margin: 20px auto;
+    gap: 20px; 
+}
+
+#control-panel {
+    flex: 1; 
+    min-width: 283px;
+    max-width: 351px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    align-self: flex-start; 
+}
+
+#vis-container {
+    flex: 3; 
+    min-width: 605px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+#scatterplot-panel,
+#boxplot-panel {
+    background: #ffffff;
+    padding: 27px;
+    border-radius: 8px;
+    box-shadow: 0 4px 13px rgba(0, 0, 0, 0.05);
+}
+
+#control-panel label {
+    display: block;
+    margin-top: 17px;
+    margin-bottom: 7px;
+    font-weight: 600;
+    font-size: 0.95em;
+    color: #333;
+}
+
+#control-panel select {
+    width: 100%;
+    padding: 11px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+    font-size: 1em;
+    box-sizing: border-box; 
+}
+
+#control-panel select:focus {
+    border-color: #0365cd;
+    outline: none;
+    box-shadow: 0 0 5px rgba(3, 96, 196, 0.3);
+}
+
+#control-panel button {
+    width: 100%;
+    padding: 11px;
+    margin-top: 20px;
+    border-radius: 6px;
+    border: 1px solid #1460b2;
+    background-color: #397cc3;
+    color: white;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-sizing: border-box;
+}
+
+#control-panel button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+#control-panel button:active {
+    transform: translateY(0);
+}
+
+svg {
+    width: 100%;
+    display: block;
+    overflow: visible; 
+}
+
+#scatterplot-svg {
+    height: 551px;
+    min-width: 900px;
+}
+
+#boxplot-svg {
+    height: 405px;
+}
+
+.axis .domain {
+    stroke: #555;
+    stroke-width: 1.6px;
+}
+
+.axis .tick line {
+    stroke: #ddd;
+    stroke-dasharray: 2,2;
+}
+
+.axis .tick text {
+    fill: #444;
+    font-size: 12px;
+}
+
+.axis-label {
+    font-size: 13px;
+    font-weight: 600;
+    fill: #222;
+    text-anchor: middle;
+}
+
+.scatter-point {
+    stroke: rgba(0, 0, 0, 0.3);
+    stroke-width: 0.5px;
+}
+
+.scatter-point.selected {
+    stroke: #000000;
+    stroke-width: 2px;
+    r: 6px; 
+}
+
+.scatter-point.unselected {
+    fill-opacity: 0.2;
+    stroke-opacity: 0.2;
+}
+
+.lasso-path {
+    fill: #007bff;
+    fill-opacity: 0.1;
+    stroke: #227ddf;
+    stroke-width: 2px;
+    stroke-dasharray: 5, 5;
+}
+
+.legend-item {
+    cursor: default;
+}
+
+.legend-rect {
+    stroke: #888;
+    stroke-width: 0.5px;
+}
+
+.legend-text {
+    font-size: 11px;
+    fill: #333;
+}
+
+.boxplot-group {
+    /* Transitions will be applied in Javascript file*/
+}
+
+.box {
+    stroke: #000;
+    stroke-width: 1px;
+    fill-opacity: 0.6;
+}
+
+.median-line {
+    stroke: #000;
+    stroke-width: 2px;
+}
+
+.whisker {
+    stroke: #000;
+    stroke-width: 1px;
+}
+
+.outlier, .small-group-point {
+    fill-opacity: 0.7;
+    stroke: #000;
+    stroke-width: 0.6px;
+}
+
+.violin-path {
+    stroke: #000;
+    stroke-width: 1px;
+    fill-opacity: 0.6;
+}
